@@ -1,6 +1,28 @@
-FROM nginx
+FROM node
 
-COPY public/ /usr/share/nginx/html
+# 修改时区
+
+# 安装依赖
+#RUN apt-get update && \
+# apt-get install -y --no-install-recommends \
+# curl
+
+#安装 Hexo
+RUN npm install -g hexo-cli
+
+VOLUME /blog
+
+RUN init /blog \
+  && cd /blog \
+  && npm install
+
+COPY posts /blog/source/_posts
+COPY resource /blog/resource
+COPY _config.yml /blog/
+
+RUN cd /blog \
+  && hexo generate \
+  && cp public /usr/share/nginx/html
 
 EXPOSE 80 443
 
