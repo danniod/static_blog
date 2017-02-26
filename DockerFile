@@ -12,17 +12,18 @@ RUN npm install -g hexo-cli
 
 VOLUME /blog
 
-RUN hexo init /blog \
-  && cd /blog \
-  && npm install
-
+#RUN hexo init /blog \
+#  && cd /blog \
+#  && npm install
+ADD init.tar.gz /blog
+ADD themes.tar.gz /blog/themes/yilia
 COPY posts /blog/source/_posts
 COPY resource /blog/resource
 COPY _config.yml /blog/
 
 RUN cd /blog \
   && hexo generate \
-  && cp public /usr/share/nginx/html
+  && mv /blog/public/ /usr/share/nginx/html/
 
 EXPOSE 80 443
 
